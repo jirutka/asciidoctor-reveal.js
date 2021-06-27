@@ -193,16 +193,28 @@ module Slim::Helpers
 
   def revealjs_dependencies(document, node, revealjsdir)
     dependencies = []
-    dependencies << "{ src: '#{revealjsdir}/plugin/zoom-js/zoom.js', async: true }" unless (node.attr? 'revealjs_plugin_zoom', 'disabled')
+    dependencies << "{ src: '#{revealjsdir}/plugin/zoom/zoom.js', async: true }" unless (node.attr? 'revealjs_plugin_zoom', 'disabled')
     dependencies << "{ src: '#{revealjsdir}/plugin/notes/notes.js', async: true }" unless (node.attr? 'revealjs_plugin_notes', 'disabled')
     dependencies << "{ src: '#{revealjsdir}/plugin/markdown/marked.js', async: true }" if (node.attr? 'revealjs_plugin_marked', 'enabled')
     dependencies << "{ src: '#{revealjsdir}/plugin/markdown/markdown.js', async: true }" if (node.attr? 'revealjs_plugin_markdown', 'enabled')
-    if (node.attr? 'revealjs_plugins') &&
-        !(revealjs_plugins_file = (node.attr 'revealjs_plugins', '').strip).empty? &&
-        !(revealjs_plugins_content = (File.read revealjs_plugins_file).strip).empty?
-      dependencies << revealjs_plugins_content
-    end
+    # if (node.attr? 'revealjs_plugins') &&
+    #     !(revealjs_plugins_file = (node.attr 'revealjs_plugins', '').strip).empty? &&
+    #     !(revealjs_plugins_content = (File.read revealjs_plugins_file).strip).empty?
+    #   dependencies << revealjs_plugins_content
+    # end
     dependencies.join(",\n      ")
+  end
+
+  def revealjs_plugins(document,node,revealjsdir)
+    plugins=[]
+    # Override reveal.js built-in highlight.js syntax highlighter,so build-in highlight.js will not register
+    #plugins<<"RevealHighlight" unless (node.attr? 'revealjs_plugin_highlight', 'disabled')
+    plugins<<"RevealNotes" unless (node.attr? 'revealjs_plugin_notes', 'disabled')
+    plugins<<"RevealZoom" unless (node.attr? 'revealjs_plugin_zoom', 'disabled')
+    plugins<<"RevealMarkdown" if (node.attr? 'revealjs_plugin_markdown', 'enabled')
+    plugins<<"RevealSearch" if (node.attr? 'revealjs_plugin_search', 'enabled')
+    plugins<<"RevealMath" if (node.attr? 'revealjs_plugin_math', 'enabled')
+    plugins.join(", ")
   end
 
 
